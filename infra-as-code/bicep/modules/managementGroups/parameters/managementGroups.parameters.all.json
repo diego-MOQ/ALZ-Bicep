@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "parTopLevelManagementGroupPrefix": {
-      "value": "alz"
+      "value": "IBAC"
     },
     "parTopLevelManagementGroupDisplayName": {
-      "value": "Azure Landing Zones"
+      "value": "IBAC-MG-BASE-ALL"
     },
     "parTopLevelManagementGroupParentId": {
       "value": ""
