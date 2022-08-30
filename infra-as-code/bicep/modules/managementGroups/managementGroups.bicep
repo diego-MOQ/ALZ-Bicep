@@ -3,11 +3,11 @@ targetScope = 'tenant'
 @description('Prefix for the management group hierarchy.  This management group will be created as part of the deployment.')
 @minLength(2)
 @maxLength(10)
-param parTopLevelManagementGroupPrefix string = 'alz'
+param parTopLevelManagementGroupPrefix string = 'IBAC'
 
 @description('Display name for top level management group.  This name will be applied to the management group prefix defined in parTopLevelManagementGroupPrefix parameter.')
 @minLength(2)
-param parTopLevelManagementGroupDisplayName string = 'Azure Landing Zones'
+param parTopLevelManagementGroupDisplayName string = 'IBAC-MG-BASE-ALL'
 
 @description('Optional parent for Management Group hierarchy, used as intermediate root Management Group parent, if specified. If empty, default, will deploy beneath Tenant Root Management Group.')
 param parTopLevelManagementGroupParentId string = ''
@@ -26,66 +26,44 @@ param parTelemetryOptOut bool = false
 
 // Platform and Child Management Groups
 var varPlatformMg = {
-  name: '${parTopLevelManagementGroupPrefix}-platform'
-  displayName: 'Platform'
+  name: '${parTopLevelManagementGroupPrefix}-MG-CPL-ALL'
+  displayName: 'IBAC-MG-CPL-ALL'
 }
 
 var varPlatformManagementMg = {
-  name: '${parTopLevelManagementGroupPrefix}-platform-management'
-  displayName: 'Management'
-}
-
-var varPlatformConnectivityMg = {
-  name: '${parTopLevelManagementGroupPrefix}-platform-connectivity'
-  displayName: 'Connectivity'
-}
-
-var varPlatformIdentityMg = {
-  name: '${parTopLevelManagementGroupPrefix}-platform-identity'
-  displayName: 'Identity'
+  name: '${parTopLevelManagementGroupPrefix}-MG-HUB-PRD1'
+  displayName: 'IBAC-MG-HUB-PRD1'
 }
 
 // Landing Zones & Child Management Groups
 var varLandingZoneMg = {
-  name: '${parTopLevelManagementGroupPrefix}-landingzones'
-  displayName: 'Landing Zones'
+  name: '${parTopLevelManagementGroupPrefix}-MG-LDZ-ALL'
+  displayName: 'IBAC-MG-LDZ-ALL'
 }
 
 // Used if parLandingZoneMgAlzDefaultsEnable == true
 var varLandingZoneMgChildrenAlzDefault = {
-  corp: {
-    displayName: 'Corp'
+  PROD: {
+    displayName: 'PROD'
   }
-  online: {
-    displayName: 'Online'
+  DR: {
+    displayName: 'DR'
   }
 }
 
 // Used if parLandingZoneMgConfidentialEnable == true
 var varLandingZoneMgChildrenConfidential = {
-  'confidential-corp': {
-    displayName: 'Confidential Corp'
+  'confidential-prod': {
+    displayName: 'Confidential Prod'
   }
-  'confidential-online': {
-    displayName: 'Confidential Online'
+  'confidential-dr': {
+    displayName: 'Confidential DR'
   }
 }
 
 // Build final onject based on input parameters for child MGs of LZs
 var varLandingZoneMgChildrenUnioned = (parLandingZoneMgAlzDefaultsEnable && parLandingZoneMgConfidentialEnable && (!empty(parLandingZoneMgChildren))) ? union(varLandingZoneMgChildrenAlzDefault, varLandingZoneMgChildrenConfidential, parLandingZoneMgChildren) : (parLandingZoneMgAlzDefaultsEnable && parLandingZoneMgConfidentialEnable && (empty(parLandingZoneMgChildren))) ? union(varLandingZoneMgChildrenAlzDefault, varLandingZoneMgChildrenConfidential) : (parLandingZoneMgAlzDefaultsEnable && !parLandingZoneMgConfidentialEnable && (!empty(parLandingZoneMgChildren))) ? union(varLandingZoneMgChildrenAlzDefault, parLandingZoneMgChildren) : (parLandingZoneMgAlzDefaultsEnable && !parLandingZoneMgConfidentialEnable && (empty(parLandingZoneMgChildren))) ? varLandingZoneMgChildrenAlzDefault : (!parLandingZoneMgAlzDefaultsEnable && parLandingZoneMgConfidentialEnable && (!empty(parLandingZoneMgChildren))) ? union(varLandingZoneMgChildrenConfidential, parLandingZoneMgChildren) : (!parLandingZoneMgAlzDefaultsEnable && parLandingZoneMgConfidentialEnable && (empty(parLandingZoneMgChildren))) ? varLandingZoneMgChildrenConfidential : (!parLandingZoneMgAlzDefaultsEnable && !parLandingZoneMgConfidentialEnable && (!empty(parLandingZoneMgChildren))) ? parLandingZoneMgChildren : (!parLandingZoneMgAlzDefaultsEnable && !parLandingZoneMgConfidentialEnable && (empty(parLandingZoneMgChildren))) ? {} : {}
 
-
-// Sandbox Management Group
-var varSandboxMg = {
-  name: '${parTopLevelManagementGroupPrefix}-sandbox'
-  displayName: 'Sandbox'
-}
-
-// Decomissioned Management Group
-var varDecommissionedMg = {
-  name: '${parTopLevelManagementGroupPrefix}-decommissioned'
-  displayName: 'Decommissioned'
-}
 
 // Customer Usage Attribution Id
 var varCuaid = '9b7965a0-d77c-41d6-85ef-ec3dfea4845b'
@@ -128,30 +106,6 @@ resource resLandingZonesMg 'Microsoft.Management/managementGroups@2021-04-01' = 
   }
 }
 
-resource resSandboxMg 'Microsoft.Management/managementGroups@2021-04-01' = {
-  name: varSandboxMg.name
-  properties: {
-    displayName: varSandboxMg.displayName
-    details: {
-      parent: {
-        id: resTopLevelMg.id
-      }
-    }
-  }
-}
-
-resource resDecommissionedMg 'Microsoft.Management/managementGroups@2021-04-01' = {
-  name: varDecommissionedMg.name
-  properties: {
-    displayName: varDecommissionedMg.displayName
-    details: {
-      parent: {
-        id: resTopLevelMg.id
-      }
-    }
-  }
-}
-
 // Level 3 - Child Management Groups under Platform MG
 resource resPlatformManagementMg 'Microsoft.Management/managementGroups@2021-04-01' = {
   name: varPlatformManagementMg.name
@@ -165,34 +119,10 @@ resource resPlatformManagementMg 'Microsoft.Management/managementGroups@2021-04-
   }
 }
 
-resource resPlatformConnectivityMg 'Microsoft.Management/managementGroups@2021-04-01' = {
-  name: varPlatformConnectivityMg.name
-  properties: {
-    displayName: varPlatformConnectivityMg.displayName
-    details: {
-      parent: {
-        id: resPlatformMg.id
-      }
-    }
-  }
-}
-
-resource resPlatformIdentityMg 'Microsoft.Management/managementGroups@2021-04-01' = {
-  name: varPlatformIdentityMg.name
-  properties: {
-    displayName: varPlatformIdentityMg.displayName
-    details: {
-      parent: {
-        id: resPlatformMg.id
-      }
-    }
-  }
-}
-
 // Level 3 - Child Management Groups under Landing Zones MG
 
 resource resLandingZonesChildMgs 'Microsoft.Management/managementGroups@2021-04-01' = [for mg in items(varLandingZoneMgChildrenUnioned): if (!empty(varLandingZoneMgChildrenUnioned)) {
-  name: '${parTopLevelManagementGroupPrefix}-landingzones-${mg.key}'
+  name: '${parTopLevelManagementGroupPrefix}-MG-LDZ-${mg.key}'
   properties: {
     displayName: mg.value.displayName
     details: {
@@ -215,27 +145,14 @@ output outTopLevelManagementGroupId string = resTopLevelMg.id
 
 output outPlatformManagementGroupId string = resPlatformMg.id
 output outPlatformManagementManagementGroupId string = resPlatformManagementMg.id
-output outPlatformConnectivityManagementGroupId string = resPlatformConnectivityMg.id
-output outPlatformIdentityManagementGroupId string = resPlatformIdentityMg.id
-
 output outLandingZonesManagementGroupId string = resLandingZonesMg.id
-output outLandingZoneChildrenMangementGroupIds array = [for mg in items(varLandingZoneMgChildrenUnioned): '/providers/Microsoft.Management/managementGroups/${parTopLevelManagementGroupPrefix}-landingzones-${mg.key}' ]
-
-output outSandboxManagementGroupId string = resSandboxMg.id
-
-output outDecommissionedManagementGroupId string = resDecommissionedMg.id
+output outLandingZoneChildrenMangementGroupIds array = [for mg in items(varLandingZoneMgChildrenUnioned): '/providers/Microsoft.Management/managementGroups/${parTopLevelManagementGroupPrefix}-MG-LDZ-${mg.key}' ]
 
 // Output Management Group Names
 output outTopLevelManagementGroupName string = resTopLevelMg.name
 
 output outPlatformManagementGroupName string = resPlatformMg.name
 output outPlatformManagementManagementGroupName string = resPlatformManagementMg.name
-output outPlatformConnectivityManagementGroupName string = resPlatformConnectivityMg.name
-output outPlatformIdentityManagementGroupName string = resPlatformIdentityMg.name
-
 output outLandingZonesManagementGroupName string = resLandingZonesMg.name
 output outLandingZoneChildrenMangementGroupNames array = [for mg in items(varLandingZoneMgChildrenUnioned): mg.value.displayName ]
 
-output outSandboxManagementGroupName string = resSandboxMg.name
-
-output outDecommissionedManagementGroupName string = resDecommissionedMg.name

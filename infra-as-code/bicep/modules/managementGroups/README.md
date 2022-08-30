@@ -20,8 +20,8 @@ The module requires the following inputs:
 
 | Parameter                             | Type   | Description                                                                                                                                                                          | Requirements                      | Example                                                                                 |
 | ------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- | --------------------------------------------------------------------------------------- |
-| parTopLevelManagementGroupPrefix      | string | Prefix for the management group hierarchy.  This management group will be created as part of the deployment.                                                                         | 2-10 characters                   | `alz`                                                                                   |
-| parTopLevelManagementGroupDisplayName | string | Display name for top level management group.  This name will be applied to the management group prefix defined in `parTopLevelManagementGroupPrefix` parameter.                      | Minimum two characters            | `Azure Landing Zones`                                                                   |
+| parTopLevelManagementGroupPrefix      | string | Prefix for the management group hierarchy.  This management group will be created as part of the deployment.                                                                         | 2-10 characters                   | `IBAC`                                                                                   |
+| parTopLevelManagementGroupDisplayName | string | Display name for top level management group.  This name will be applied to the management group prefix defined in `parTopLevelManagementGroupPrefix` parameter.                      | Minimum two characters            | `IBAC-MG-BASE-ALL`                                                                   |
 | parTopLevelManagementGroupParentId    | string | Optional parent for Management Group hierarchy, used as intermediate root Management Group parent, if specified. If empty, default, will deploy beneath Tenant Root Management Group. | Not required input, default `''`  | `/providers/Microsoft.Management/managementGroups/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` |
 | parLandingZoneMgAlzDefaultsEnable     | bool   | Deploys Corp & Online Management Groups beneath Landing Zones Management Group if set to true.                                                                                       | Mandatory input, default: `true`  | `true`                                                                                  |
 | parLandingZoneMgConfidentialEnable    | bool   | Deploys Confidential Corp & Confidential Online Management Groups beneath Landing Zones Management Group if set to true.                                                             | Mandatory input, default: `false` | `false`                                                                                 |
@@ -123,7 +123,7 @@ In this example, the management groups are created at the `Tenant Root Group` th
 az deployment tenant create \
   --template-file infra-as-code/bicep/modules/managementGroups/managementGroups.bicep \
   --parameters @infra-as-code/bicep/modules/managementGroups/parameters/managementGroups.parameters.all.json \
-  --location eastus
+  --location australiaeast
 ```
 OR
 ```bash
@@ -139,9 +139,9 @@ az deployment tenant create \
 ```powershell
 # For Azure global regions
 New-AzTenantDeployment `
-  -TemplateFile infra-as-code/bicep/modules/managementGroups/managementGroups.bicep `
-  -TemplateParameterFile infra-as-code/bicep/modules/managementGroups/parameters/managementGroups.parameters.all.json `
-  -Location eastus
+  -TemplateFile 'C:/Users/daraujo/OneDrive - MOQdigital/Documents/Git/Azure_Landing_Zones/ALZ-Bicep/infra-as-code/bicep/modules/managementGroups/managementGroups.bicep' `
+  -TemplateParameterFile  'C:/Users/daraujo/OneDrive - MOQdigital/Documents/Git/Azure_Landing_Zones/ALZ-Bicep/infra-as-code/bicep/modules/managementGroups/parameters/managementGroups.parameters.all.json' `
+  -Location australiaeast
 ```
 OR
 ```powershell
