@@ -1,3 +1,4 @@
+#disable-next-line Bicep Linter Configuration
 targetScope = 'tenant'
 
 @description('Prefix for the management group hierarchy.  This management group will be created as part of the deployment.')
