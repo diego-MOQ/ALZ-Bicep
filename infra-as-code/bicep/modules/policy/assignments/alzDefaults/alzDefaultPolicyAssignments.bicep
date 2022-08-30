@@ -1,10 +1,10 @@
 @description('Prefix for the management group hierarchy. DEFAULT VALUE = alz')
 @minLength(2)
 @maxLength(10)
-param parTopLevelManagementGroupPrefix string = 'alz'
+param parTopLevelManagementGroupPrefix string = 'IBAC'
 
 @description('The region where the Log Analytics Workspace & Automation Account are deployed. DEFAULT VALUE = eastus')
-param parLogAnalyticsWorkSpaceAndAutomationAccountLocation string = 'eastus'
+param parLogAnalyticsWorkSpaceAndAutomationAccountLocation string = 'australiasoutheast'
 
 @description('Log Analytics Workspace Resource ID. - DEFAULT VALUE: Empty String ')
 param parLogAnalyticsWorkspaceResourceId string = ''
@@ -13,7 +13,7 @@ param parLogAnalyticsWorkspaceResourceId string = ''
 param parLogAnalyticsWorkspaceLogRetentionInDays string = '365'
 
 @description('Automation account name. - DEFAULT VALUE: alz-automation-account')
-param parAutomationAccountName string = 'alz-automation-account'
+param parAutomationAccountName string = 'IBAC-automation-account'
 
 @description('An e-mail address that you want Microsoft Defender for Cloud alerts to be sent to.')
 param parMsDefenderForCloudEmailSecurityContact string = 'security_contact@replace_me.com'

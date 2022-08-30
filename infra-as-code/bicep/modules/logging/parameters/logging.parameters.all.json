@@ -3,10 +3,10 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "parLogAnalyticsWorkspaceName": {
-      "value": "alz-log-analytics"
+      "value": "ibac-log-analytics"
     },
     "parLogAnalyticsWorkspaceLocation": {
-      "value": "eastus"
+      "value": "australiasoutheast"
     },
     "parLogAnalyticsWorkspaceSkuName": {
       "value": "PerGB2018"
@@ -31,10 +31,10 @@
       ]
     },
     "parAutomationAccountName": {
-      "value": "alz-automation-account"
+      "value": "ibac-automation-account"
     },
     "parAutomationAccountLocation": {
-      "value": "eastus2"
+      "value": "australiasoutheast"
     },
     "parTags": {
       "value": {
